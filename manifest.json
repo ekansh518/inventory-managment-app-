@@ -8,14 +8,14 @@
 "theme_color": "#1f2937",
 "icons": [
 {
-"src": "https://www.google.com/search?q=https://placehold.co/192x192/4f46e5/ffffff%3Ftext%3DInv",
+"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB2aWV3Qm94PSIwIDAgMTkyIDE5MiI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzRmNDZlNSIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAwIiBmaWxsPSIjZmZmZmZmIj5JbnY8L3RleHQ+Cjwvc3ZnPg==",
 "sizes": "192x192",
-"type": "image/png"
+"type": "image/svg+xml"
 },
 {
-"src": "https://www.google.com/search?q=https://placehold.co/512x512/4f46e5/ffffff%3Ftext%3DInv",
+"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzRmNDZlNSIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjgwIiBmaWxsPSIjZmZmZmZmIj5JbnY8L3RleHQ+Cjwvc3ZnPg==",
 "sizes": "512x512",
-"type": "image/png"
+"type": "image/svg+xml"
 }
 ]
 }
