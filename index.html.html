@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cable Inventory Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-6 sm:p-8">
+        <h1 class="text-3xl sm:text-4xl font-bold text-center mb-6 text-gray-800">Inventory Management</h1>
+        <p class="text-center text-gray-500 mb-8">Track your PVC and copper inventory.</p>
+
+        <!-- Inventory Input Form -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">Add New Entry</h2>
+            <form id="inventory-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="flex flex-col">
+                    <label for="productName" class="text-sm font-medium text-gray-600 mb-1">Product Name</label>
+                    <select id="productName" required
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                        <option value="Copper Cable">Copper Cable</option>
+                        <option value="PVC Sheath">PVC Sheath</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="entryType" class="text-sm font-medium text-gray-600 mb-1">Entry Type</label>
+                    <select id="entryType" required
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                        <option value="purchase">Purchase</option>
+                        <option value="use">Use</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="date" class="text-sm font-medium text-gray-600 mb-1">Date</label>
+                    <input type="date" id="date" required
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="quantity" class="text-sm font-medium text-gray-600 mb-1">Quantity (in meters)</label>
+                    <input type="number" id="quantity" step="0.01" min="0.01" required
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="purchasePrice" class="text-sm font-medium text-gray-600 mb-1">Purchase Price (per meter)</label>
+                    <input type="number" id="purchasePrice" step="0.01" min="0"
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                </div>
+                
+                <div class="col-span-1 sm:col-span-2 lg:col-span-1 flex items-end">
+                    <button type="submit"
+                        class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md">
+                        Add Entry
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Inventory Table -->
+        <div>
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">Inventory Log</h2>
+            <div class="bg-gray-50 rounded-lg p-4 shadow-inner overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-200 rounded-lg">
+                        <tr>
+                            <th scope="col" class="px-3 py-3 rounded-tl-lg">Date</th>
+                            <th scope="col" class="px-3 py-3">Product Name</th>
+                            <th scope="col" class="px-3 py-3 text-right">Quantity</th>
+                            <th scope="col" class="px-3 py-3 text-right">Purchase Price</th>
+                            <th scope="col" class="px-3 py-3 text-right">Amount</th>
+                            <th scope="col" class="px-3 py-3 text-right rounded-tr-lg">Stock On Hand</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-table-body">
+                        <!-- Inventory rows will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-data-message" class="text-center text-gray-400 mt-4">
+                No entries yet. Add one to get started!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('inventory-form');
+        const inventoryTableBody = document.getElementById('inventory-table-body');
+        const noDataMessage = document.getElementById('no-data-message');
+        const productNameInput = document.getElementById('productName');
+        const entryTypeInput = document.getElementById('entryType');
+        const quantityInput = document.getElementById('quantity');
+        const purchasePriceInput = document.getElementById('purchasePrice');
+
+        // Initial check for purchase price input visibility
+        updatePriceVisibility();
+        entryTypeInput.addEventListener('change', updatePriceVisibility);
+
+        function updatePriceVisibility() {
+            if (entryTypeInput.value === 'use') {
+                purchasePriceInput.closest('div').style.display = 'none';
+                purchasePriceInput.removeAttribute('required');
+            } else {
+                purchasePriceInput.closest('div').style.display = 'flex';
+                purchasePriceInput.setAttribute('required', 'required');
+            }
+        }
+
+        let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+
+        // Save inventory to local storage
+        const saveInventory = () => {
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+        };
+
+        // Render the inventory table
+        const renderTable = () => {
+            inventoryTableBody.innerHTML = '';
+            if (inventory.length === 0) {
+                noDataMessage.style.display = 'block';
+                return;
+            } else {
+                noDataMessage.style.display = 'none';
+            }
+
+            // Calculate current stock for each product
+            const stock = {};
+            inventory.forEach(entry => {
+                if (!stock[entry.productName]) {
+                    stock[entry.productName] = 0;
+                }
+                stock[entry.productName] += entry.quantity;
+            });
+
+            // Sort inventory by date
+            const sortedInventory = inventory.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            sortedInventory.forEach(entry => {
+                const row = document.createElement('tr');
+                row.classList.add('bg-white', 'border-b', 'hover:bg-gray-100');
+
+                // Check for negative quantity to apply red color for "Use" entries
+                const quantityColor = entry.quantity < 0 ? 'text-red-500' : 'text-green-600';
+
+                // Display purchase price only for 'purchase' entries
+                const displayPrice = entry.purchasePrice !== null ? `$${entry.purchasePrice.toFixed(2)}` : '--';
+
+                // Display amount only for 'purchase' entries
+                const displayAmount = entry.purchasePrice !== null ? `$${entry.amount.toFixed(2)}` : '--';
+
+                row.innerHTML = `
+                    <td class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap">${entry.date}</td>
+                    <td class="px-3 py-3">${entry.productName}</td>
+                    <td class="px-3 py-3 text-right font-semibold ${quantityColor}">${entry.quantity}</td>
+                    <td class="px-3 py-3 text-right">${displayPrice}</td>
+                    <td class="px-3 py-3 text-right">${displayAmount}</td>
+                    <td class="px-3 py-3 text-right font-bold text-gray-800">${stock[entry.productName]}</td>
+                `;
+                inventoryTableBody.appendChild(row);
+            });
+        };
+
+        // Register the service worker to enable PWA features
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // Set default date to today
+        window.onload = () => {
+            document.getElementById('date').value = new Date().toISOString().slice(0, 10);
+            renderTable();
+        };
+
+    </script>
+</body>
+</html>
