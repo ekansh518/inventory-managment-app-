@@ -2,7 +2,7 @@
 "name": "Cable Inventory",
 "short_name": "Inventory",
 "description": "A simple inventory management app for your cable business.",
-"start_url": "./inventory_manager.html",
+"start_url": ".",
 "display": "standalone",
 "background_color": "#ffffff",
 "theme_color": "#1f2937",
